@@ -1,0 +1,7 @@
+node_modules/
+server.log
+server.log.err
+server.js
+generate-icons.js
+package-lock.json
+.freebuff/
