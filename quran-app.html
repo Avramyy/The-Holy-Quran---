@@ -1669,6 +1669,11 @@ function removeBookmark(key) {
 async function loadSurah(number) {
   currentSurah = number;
   const surah = SURAHS.find(s => s.number === number);
+  // Close sidebar on mobile after selecting a surah
+  if (window.innerWidth <= 768) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
   renderSurahList(document.getElementById('searchInput').value);
 
   // Show header
