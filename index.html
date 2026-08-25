@@ -879,6 +879,24 @@
     border-radius: 4px;
   }
 
+  .page-ayah-bookmark {
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-left: 2px;
+    transition: color 0.2s, transform 0.2s;
+    user-select: none;
+  }
+
+  .page-ayah-bookmark:hover {
+    color: var(--gold);
+    transform: scale(1.3);
+  }
+
+  .page-ayah-bookmark.bookmarked {
+    color: var(--gold);
+  }
+
   /* Last read indicator */
   .last-read-banner {
     background: linear-gradient(135deg, var(--gold-light) 0%, var(--bg-card) 100%);
@@ -1694,7 +1712,9 @@ function renderAyahs(surahNumber) {
     // Page View (Mushaf style)
     let arabicText = '';
     for (let i = startIdx; i < endIdx; i++) {
-      arabicText += `<span class="page-ayah-span" onclick="togglePageAyahInfo(${surahNumber},${i})" style="cursor:pointer">` + colorizeArabic(arabicAyahs[i].text) + ' \uFD3F' + (i + 1) + '\uFD3E</span> ';
+      const ayahKey = `${surahNumber}:${i + 1}`;
+      const isAyahBookmarked = bookmarks[ayahKey];
+      arabicText += `<span class="page-ayah-span" onclick="togglePageAyahInfo(${surahNumber},${i})" style="cursor:pointer">` + colorizeArabic(arabicAyahs[i].text) + ' \uFD3F' + (i + 1) + '\uFD3E</span>' + `<span class="page-ayah-bookmark ${isAyahBookmarked ? 'bookmarked' : ''}" onclick="event.stopPropagation();toggleBookmark('${ayahKey}')" title="Bookmark ayah ${i + 1}">${isAyahBookmarked ? '★' : '☆'}</span> `;
     }
 
     // Save last read
