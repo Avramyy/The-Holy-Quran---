@@ -51,6 +51,40 @@
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
   }
 
+  [data-theme="black"] {
+    --bg: #000000;
+    --bg-card: #111111;
+    --bg-sidebar: #0a0a0a;
+    --bg-hover: #1a1a1a;
+    --text: #ffffff;
+    --text-secondary: #b0b0b0;
+    --accent: #00c853;
+    --accent-light: #003d1a;
+    --accent-dark: #69f0ae;
+    --border: #333333;
+    --gold: #ffd740;
+    --gold-light: #1a1500;
+    --shadow: 0 2px 12px rgba(0,0,0,0.5);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+  }
+
+  [data-theme="sepia"] {
+    --bg: #f4e8d1;
+    --bg-card: #faf3e6;
+    --bg-sidebar: #efe4cf;
+    --bg-hover: #e8dbc4;
+    --text: #2c1810;
+    --text-secondary: #6b5040;
+    --accent: #5d3a1a;
+    --accent-light: #f0e0cc;
+    --accent-dark: #8b5e3c;
+    --border: #d4c4a8;
+    --gold: #a67c3d;
+    --gold-light: #f5edd8;
+    --shadow: 0 2px 12px rgba(44,24,16,0.1);
+    --shadow-lg: 0 8px 32px rgba(44,24,16,0.15);
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -722,6 +756,14 @@
   [data-theme="dark"] .quran-rahman { color: #e8c95a; }
   [data-theme="dark"] .quran-rahim { color: #e8c95a; }
   [data-theme="dark"] .quran-prophet { color: #5ba8e8; }
+  [data-theme="black"] .quran-allah { color: #69f0ae; }
+  [data-theme="black"] .quran-rahman { color: #ffd740; }
+  [data-theme="black"] .quran-rahim { color: #ffd740; }
+  [data-theme="black"] .quran-prophet { color: #82b1ff; }
+  [data-theme="sepia"] .quran-allah { color: #2e7d32; }
+  [data-theme="sepia"] .quran-rahman { color: #a67c3d; }
+  [data-theme="sepia"] .quran-rahim { color: #a67c3d; }
+  [data-theme="sepia"] .quran-prophet { color: #3d5a80; }
 
   /* Pagination */
   .pagination {
@@ -1432,7 +1474,10 @@ let currentSurah = null;
 let bookmarks = JSON.parse(localStorage.getItem('quran_bookmarks') || '{}');
 let currentTab = 'all';
 let fontSize = 28;
-let darkMode = localStorage.getItem('quran_dark') === 'true';
+const THEMES = ['light', 'dark', 'black', 'sepia'];
+const THEME_ICONS = { light: '☀️', dark: '🌙', black: '🌑', sepia: '📜' };
+const THEME_NAMES = { light: 'Light', dark: 'Dark', black: 'Black', sepia: 'Sepia' };
+let currentTheme = localStorage.getItem('quran_theme') || 'light';
 let langMode = localStorage.getItem('quran_lang') || 'both';
 let viewMode = localStorage.getItem('quran_view') || 'card';
 let currentPage = 0;
@@ -1442,7 +1487,7 @@ let readProgress = JSON.parse(localStorage.getItem('quran_progress') || '{}');
 let ayahCache = {};
 
 // Init
-if (darkMode) document.documentElement.setAttribute('data-theme', 'dark');
+document.documentElement.setAttribute('data-theme', currentTheme);
 updateThemeButton();
 initToggles();
 renderSurahList();
@@ -2050,14 +2095,16 @@ function resetProgress() {
 }
 
 function toggleTheme() {
-  darkMode = !darkMode;
-  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
-  localStorage.setItem('quran_dark', darkMode);
+  const idx = THEMES.indexOf(currentTheme);
+  currentTheme = THEMES[(idx + 1) % THEMES.length];
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  localStorage.setItem('quran_theme', currentTheme);
   updateThemeButton();
 }
 
 function updateThemeButton() {
-  document.getElementById('themeIcon').textContent = darkMode ? '☀️' : '🌙';
+  const btn = document.getElementById('themeBtn');
+  btn.innerHTML = '<span id="themeIcon">' + THEME_ICONS[currentTheme] + '</span> ' + THEME_NAMES[currentTheme];
 }
 
 function changeFontSize(delta) {
