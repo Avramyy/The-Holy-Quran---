@@ -525,6 +525,29 @@
 
   .font-size-controls button:hover { background: var(--bg-hover); }
 
+  /* Mobile Floating Action Button */
+  .mobile-fab {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 98;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mobile-fab:hover { transform: scale(1.05); }
+  .mobile-fab:active { transform: scale(0.95); }
+  .sidebar.open ~ .mobile-fab { display: none !important; }
+
   /* Mobile Overlay */
   .sidebar-overlay {
     display: none;
@@ -551,6 +574,7 @@
     .sidebar.open { transform: translateX(0); }
     .sidebar-overlay.active { display: block; }
     .menu-toggle { display: flex; }
+    .mobile-fab { display: flex; }
     .content { padding: 16px 12px; }
     .quick-stats { flex-direction: column; gap: 12px; }
     .main-header {
@@ -1318,6 +1342,12 @@
 
 <div class="app">
   <div class="sidebar-overlay" id="overlay"></div>
+
+  <button class="mobile-fab" id="mobileFab" onclick="toggleSidebar()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M3 6h18M3 12h18M3 18h18"/>
+    </svg>
+  </button>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -2207,11 +2237,15 @@ function changeFontSize(delta) {
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('overlay').classList.toggle('active');
+  const fab = document.getElementById('mobileFab');
+  if (fab) fab.style.display = document.getElementById('sidebar').classList.contains('open') ? 'none' : '';
 }
 
 document.getElementById('overlay').addEventListener('click', () => {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('overlay').classList.remove('active');
+  const fab = document.getElementById('mobileFab');
+  if (fab) fab.style.display = '';
 });
 
 // ===== Ayah Search =====
